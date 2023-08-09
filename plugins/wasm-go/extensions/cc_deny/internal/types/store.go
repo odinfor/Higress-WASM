@@ -9,9 +9,25 @@ type (
 	// AccessStore 请求控制本地存储
 	AccessStore struct {
 		mutex sync.Mutex
-		sec   secondStore
-		min   minuteStore
-		day   dayStore
+
+		useful bool
+
+		// 是否启用秒内访问策略限制
+		secUse bool
+
+		// 当前秒内访问策略存储
+		sec secondStore
+
+		// 是否启用分钟内访问策略限制
+		minUse bool
+		// 当前分钟内访问策略存储
+		min minuteStore
+
+		// 是否启用当天内访问策略限制
+		dayUse bool
+
+		// 当天内访问策略存储
+		day dayStore
 	}
 
 	secondStore struct {
@@ -95,8 +111,3 @@ type (
 		freeTime time.Time
 	}
 )
-
-func NewStore() *AccessStore {
-	//c := NewConfDo()
-	return &AccessStore{}
-}

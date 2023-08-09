@@ -16,6 +16,8 @@ func main() {
 	types.InitConf(confPath)
 
 	fmt.Println(types.NewConfDo().LimiterConf())
+	fmt.Println(types.NewConfDo().HeaderConf())
+	fmt.Println(types.NewConfDo().CookieConf())
 
 	limiter := internal.NewTokenLimiter()
 
@@ -26,6 +28,6 @@ func main() {
 		}
 	}(limiter)
 
-	var c chan int
+	var c = make(chan int, 1)
 	<-c
 }
