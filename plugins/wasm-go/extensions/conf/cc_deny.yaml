@@ -1,13 +1,12 @@
 headerRule:
-  tag: user-agent,
-  qps: 10, // 每个调用方每秒最多 10 次
-  qpm: 100, // 每个调用方每分钟最多 100 次
-  qpd: 1000, // 每个调用方每天最多 1000 次
-  block_seconds: 300 // 超过限制后将该调用方屏蔽 300 秒，不可访问
+  tag: user-agent
+  qps: 10 # 每个调用方每秒最多 10 次
+  qpm: 100  # 每个调用方每分钟最多 100 次
+  qpd: 1000 # 每个调用方每天最多 1000 次
+  block_seconds: 300  # 超过限制后将该调用方屏蔽 300 秒，不可访问
 cookieRule:
-  tag: uid,
-  qpm: 100, // 只屏蔽超出部分的请求，下个统计周期即可恢复访问
-redis:
-  addr: localhost,
-  password: "",
-  db: 0
+  tag: uid
+  qpm: 100  # 只屏蔽超出部分的请求，下个统计周期即可恢复访问
+limiter:
+  rate: 10
+  burst: 20

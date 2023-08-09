@@ -1,4 +1,4 @@
-package cc_deny
+package internal
 
 // TokenQ
 // @Description: token 本地内存的存储队列.
