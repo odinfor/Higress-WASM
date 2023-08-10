@@ -1,0 +1,17 @@
+{
+  "rate": 10,
+  "burst": 20,
+  "cc_rules": [
+    {
+      "header": "user-agent",
+      "qps": 10,
+      "qpm": 100,
+      "qpd": 1000,
+      "block_seconds": 300
+    },
+    {
+      "cookie": "uid",
+      "qpm": 100
+    }
+  ]
+}

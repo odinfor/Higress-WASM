@@ -1,30 +1,22 @@
 package internal
 
-import (
-	"cc_deny/internal/types"
-)
-
 var (
-	hStore = &types.AccessStore{}
-	cStore = &types.AccessStore{}
+	hStore = &AccessStore{}
+	cStore = &AccessStore{}
 )
 
 func InitHeaderStore() {
-	c := types.NewConfDo().HeaderConf()
 
-	if c.QPD > 0 {
-
-	}
 }
 
 func InitCookieStore() {
 
 }
 
-func HeaderStore() *types.AccessStore {
+func HeaderStore() *AccessStore {
 	return hStore
 }
 
-func CookieStore() *types.AccessStore {
+func CookieStore() *AccessStore {
 	return cStore
 }

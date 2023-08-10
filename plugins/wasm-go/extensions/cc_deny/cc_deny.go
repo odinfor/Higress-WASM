@@ -2,22 +2,28 @@ package main
 
 import (
 	"cc_deny/internal"
-	"cc_deny/internal/types"
 	"fmt"
+	"github.com/alibaba/higress/plugins/wasm-go/pkg/wrapper"
 	"os"
 	"path/filepath"
 )
 
 func main() {
+
 	path, _ := os.Getwd()
-	confPath := filepath.Join(filepath.Dir(path), "conf/cc_deny.yaml")
+	confPath := filepath.Join(filepath.Dir(path), "conf/cc_deny.json")
 	fmt.Println(confPath)
 
-	types.InitConf(confPath)
+	wrapper.SetCtx(
+		// 插件名称
+		"cc-deny-plugin",
 
-	fmt.Println(types.NewConfDo().LimiterConf())
-	fmt.Println(types.NewConfDo().HeaderConf())
-	fmt.Println(types.NewConfDo().CookieConf())
+		// 为解析插件配置，设置自定义函数
+		wrapper.ParseConfigBy(internal.ParseConfig),
+
+		// 为处理请求头，设置自定义函数
+		wrapper.ProcessRequestHeadersBy(internal.OnHttpRequestHeaders),
+	)
 
 	limiter := internal.NewTokenLimiter()
 

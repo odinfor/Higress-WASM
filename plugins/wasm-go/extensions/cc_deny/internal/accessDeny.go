@@ -1,12 +1,11 @@
 package internal
 
 import (
-	"cc_deny/internal/types"
 	"time"
 )
 
 type Deny struct {
-	as    *types.AccessStore
+	as    *AccessStore
 	allow bool
 	err   error
 }

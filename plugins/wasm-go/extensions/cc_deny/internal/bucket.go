@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"cc_deny/internal/types"
 	"context"
 	xrate "golang.org/x/time/rate"
 	"sync"
@@ -40,14 +39,14 @@ type TokenLimiter struct {
 // bursts of at most burst tokens.
 func NewTokenLimiter() *TokenLimiter {
 
-	c := types.NewConfDo()
+	c := NewCCDenyDo()
 
 	return &TokenLimiter{
-		rate:  c.LimiterConf().Rate,
-		burst: c.LimiterConf().Burst,
-		store: NewTQ(c.LimiterConf().Burst),
+		rate:  c.RateNum(),
+		burst: c.BurstNum(),
+		store: NewTQ(c.RateNum()),
 		rescueLimiter: xrate.NewLimiter(
-			xrate.Every(time.Second/time.Duration(c.LimiterConf().Rate)), c.LimiterConf().Burst,
+			xrate.Every(time.Second/time.Duration(c.RateNum())), c.BurstNum(),
 		),
 	}
 }
