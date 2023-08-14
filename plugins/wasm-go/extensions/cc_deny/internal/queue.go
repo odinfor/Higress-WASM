@@ -12,20 +12,20 @@ type TokenQ struct {
 
 func Init() {
 
-	qid, err := proxywasm.RegisterSharedQueue("tokenQ")
-
-	// 在 DequeueSharedQueue EnqueueSharedQueue 之前使用，获取 ququeID
-	proxywasm.ResolveSharedQueue()
-
-	// 出列,
-	proxywasm.DequeueSharedQueue()
-
-	// 进列,
-	proxywasm.EnqueueSharedQueue()
-
-	proxywasm.GetSharedData()
-
-	proxywasm.SetSharedData()
+	//qid, err := proxywasm.RegisterSharedQueue("tokenQ")
+	//
+	//// 在 DequeueSharedQueue EnqueueSharedQueue 之前使用，获取 ququeID
+	//proxywasm.ResolveSharedQueue()
+	//
+	//// 出列,
+	//proxywasm.DequeueSharedQueue()
+	//
+	//// 进列,
+	//proxywasm.EnqueueSharedQueue()
+	//
+	//proxywasm.GetSharedData()
+	//
+	//proxywasm.SetSharedData()
 
 }
 

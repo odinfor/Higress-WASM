@@ -44,7 +44,7 @@ func NewTokenLimiter() *TokenLimiter {
 	return &TokenLimiter{
 		rate:  c.RateNum(),
 		burst: c.BurstNum(),
-		store: NewTQ(c.RateNum()),
+		//store: NewTQ(c.RateNum()),
 		rescueLimiter: xrate.NewLimiter(
 			xrate.Every(time.Second/time.Duration(c.RateNum())), c.BurstNum(),
 		),

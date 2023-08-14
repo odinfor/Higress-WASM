@@ -1,16 +1,47 @@
 package internal
 
 import (
-	"sync"
 	"time"
 )
 
-type (
-	// AccessStore 请求控制本地存储
-	AccessStore struct {
-		mutex sync.Mutex
+const (
+	HeaderDeny = 1
+	CookieDeny = 2
+)
 
-		useful bool
+type (
+	HeaderDenyMap struct {
+		enable bool
+		deny   map[string]AccessInfo
+	}
+
+	CookieDenyMap struct {
+		enable bool
+		deny   map[string]AccessInfo
+	}
+)
+
+type (
+	// AccessInfo 请求控制本地存储
+	AccessInfo struct {
+
+		// 策略类型, HeaderDeny: 基于header策略防护, CookieDeny: 基于cookie策略防护
+		DenyType int `json:"denyType"`
+
+		// 策略防护采用的key
+		DenyK string `json:"denyK"`
+
+		// 策略防护采用的value
+		DenyV string `json:"denyV"`
+
+		// 是否处于锁定状态
+		Blocked bool `json:"blocked"`
+
+		// 被锁定的原因
+		BlockReason string `json:"BlockReason"`
+
+		// 被锁定后屏蔽请求秒数
+		BlockSeconds int `json:"blockSeconds"`
 
 		// 是否启用秒内访问策略限制
 		secUse bool
@@ -47,9 +78,6 @@ type (
 		// 当前统计问周期内的访问次数
 		account int
 
-		// 每次被锁定后屏蔽请求秒数
-		blockNum int
-
 		// 被锁定的时间
 		blockTime time.Time
 
@@ -73,9 +101,6 @@ type (
 
 		// 当前统计问周期内的访问次数
 		account int
-
-		// 每次被锁定后屏蔽请求分钟数
-		blockNum int
 
 		// 被锁定的时间
 		blockTime time.Time
@@ -101,9 +126,6 @@ type (
 		// 当前统计问周期内的访问次数
 		account int
 
-		// 每次被锁定后屏蔽请求天数
-		blockNum int
-
 		// 被锁定的时间
 		blockTime time.Time
 
@@ -111,3 +133,54 @@ type (
 		freeTime time.Time
 	}
 )
+
+func GetHDMap() *HeaderDenyMap {
+	return &HeaderDenyMap{}
+}
+
+func GetCDMap() *CookieDenyMap {
+	return &CookieDenyMap{}
+}
+
+func InitDeny() {
+	rules := NewCCDenyDo().Rules()
+	hdm := GetHDMap()
+	cdm := GetCDMap()
+
+	for _, v := range rules {
+		var info AccessInfo
+		info.BlockSeconds = v.BlockSeconds
+
+		if v.QPS > 0 {
+			info.secUse = true
+			info.sec.top = v.QPS
+		}
+
+		if v.QPM > 0 {
+			info.minUse = true
+			info.min.top = v.QPM
+		}
+
+		if v.QPD > 0 {
+			info.dayUse = true
+			info.day.top = v.QPD
+		}
+
+		if len(v.Header) > 0 {
+			info.DenyType = HeaderDeny
+			info.DenyK = Header
+			info.DenyV = v.Header
+			hdm.enable = true
+			hdm.deny[v.Header] = info
+			continue
+		}
+		if len(v.Cookie) > 0 {
+			info.DenyType = CookieDeny
+			info.DenyK = Cookie
+			info.DenyV = v.Cookie
+			cdm.enable = true
+			cdm.deny[v.Cookie] = info
+			continue
+		}
+	}
+}

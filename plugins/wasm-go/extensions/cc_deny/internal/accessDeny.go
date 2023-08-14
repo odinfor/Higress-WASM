@@ -5,7 +5,7 @@ import (
 )
 
 type Deny struct {
-	as    *AccessStore
+	as    *AccessInfo
 	allow bool
 	err   error
 }
